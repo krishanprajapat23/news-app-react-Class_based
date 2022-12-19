@@ -1,1 +1,1 @@
-# news-app-react-second-app
+NEWS App (React Second App)
