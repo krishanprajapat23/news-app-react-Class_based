@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 export class NewsItem extends Component {
+    
   render() {
     let { title, desc, imgUrl } = this.props;
     return (
