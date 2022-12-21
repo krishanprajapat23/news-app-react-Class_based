@@ -277,6 +277,14 @@ export class News extends Component {
       loading: false,
     };
   }
+
+  async componentDidMount(){
+    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=1982f1087a7741e39dcd68ca30f43f11`
+    let data = await fetch(url);
+    let parseData = await data.json();
+    console.log(parseData)
+    this.setState({articles:parseData.articles})
+  }
   render() {
     return (
       <div className="container-md container-fluid my-3">
@@ -285,12 +293,11 @@ export class News extends Component {
           {this.state.articles.map((el)=>{
             let {description, title, url, urlToImage, publishedAt} = el;
             return  <div className="col-md-4 col-sm-6" key={url}>
-            <NewsItem time={publishedAt} title={title} desc={`${description}`} imgUrl={urlToImage} newsUrl={url}/>
+            <NewsItem time={publishedAt} title={title} desc={`${description? description: " "}`} imgUrl={urlToImage} newsUrl={url}/>
           </div>
           })}
          
         </div>
-        1982f1087a7741e39dcd68ca30f43f11
       </div>
     );
   }
