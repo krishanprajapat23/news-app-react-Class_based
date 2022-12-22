@@ -275,15 +275,42 @@ export class News extends Component {
     this.state = {
       articles: this.articles,
       loading: false,
+      page:1,
     };
   }
 
   async componentDidMount(){
-    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=1982f1087a7741e39dcd68ca30f43f11`
+    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=1982f1087a7741e39dcd68ca30f43f11&page=1`
     let data = await fetch(url);
     let parseData = await data.json();
     console.log(parseData)
-    this.setState({articles:parseData.articles})
+    this.setState({articles:parseData.articles, totalResults:parseData.totalResults})
+  }
+
+
+  //next or prev btn for pagination
+  handlePrevClick =async ()=>{
+    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=1982f1087a7741e39dcd68ca30f43f11&page=${this.state.page -1}&pageSize=20`
+    let data = await fetch(url);
+    let parseData = await data.json();
+    this.setState({
+      articles:parseData.articles,
+      page: this.state.page-1
+    })
+  }
+
+  handleNextClick =async ()=>{
+    if (this.state.page + 1 > Math.ceil(this.state.totalResults/20)) {
+
+    } else {
+      let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=1982f1087a7741e39dcd68ca30f43f11&page=${this.state.page + 1}&pageSize=20`
+    let data = await fetch(url);
+    let parseData = await data.json();
+    this.setState({
+      articles:parseData.articles,
+      page: this.state.page+1
+    })
+    }
   }
   render() {
     return (
@@ -296,7 +323,10 @@ export class News extends Component {
             <NewsItem time={publishedAt} title={title} desc={`${description? description: " "}`} imgUrl={urlToImage} newsUrl={url}/>
           </div>
           })}
-         
+        </div>
+        <div className="d-flex justify-content-between">
+          <button disabled={this.state.page<=1} type="button" className="btn btn-dark" onClick={this.handlePrevClick}>&larr; Previous</button>
+          <button type="button" className="btn btn-dark" onClick={this.handleNextClick}>&rarr; Next</button>
         </div>
       </div>
     );
