@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import NewsItem from "./NewsItem";
+import Spinner from "./Spinner";
 
 export class News extends Component {
   articles = [
@@ -275,58 +276,71 @@ export class News extends Component {
     this.state = {
       articles: this.articles,
       loading: false,
-      page:1,
+      page: 1,
     };
   }
 
-  async componentDidMount(){
-    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=1982f1087a7741e39dcd68ca30f43f11&page=1`
+  async componentDidMount() {
+    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=1982f1087a7741e39dcd68ca30f43f11&page=1&pageSize=${this.props.pageSize}`;
+    this.setState({loading:true})
     let data = await fetch(url);
     let parseData = await data.json();
-    console.log(parseData)
-    this.setState({articles:parseData.articles, totalResults:parseData.totalResults})
+    console.log(parseData);
+    this.setState({
+      articles: parseData.articles,
+      totalResults: parseData.totalResults,
+      loading:false
+    });
   }
-
 
   //next or prev btn for pagination
-  handlePrevClick =async ()=>{
-    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=1982f1087a7741e39dcd68ca30f43f11&page=${this.state.page -1}&pageSize=20`
+  handlePrevClick = async () => {
+    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=1982f1087a7741e39dcd68ca30f43f11&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`;
+    this.setState({loading:true})
     let data = await fetch(url);
     let parseData = await data.json();
     this.setState({
-      articles:parseData.articles,
-      page: this.state.page-1
-    })
-  }
+      articles: parseData.articles,
+      page: this.state.page - 1,
+      loading:false
+    });
+  };
 
-  handleNextClick =async ()=>{
-    if (this.state.page + 1 > Math.ceil(this.state.totalResults/20)) {
-
-    } else {
-      let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=1982f1087a7741e39dcd68ca30f43f11&page=${this.state.page + 1}&pageSize=20`
+  handleNextClick = async () => {
+    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=1982f1087a7741e39dcd68ca30f43f11&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
+    this.setState({loading:true})
     let data = await fetch(url);
     let parseData = await data.json();
     this.setState({
-      articles:parseData.articles,
-      page: this.state.page+1
-    })
-    }
-  }
+      articles: parseData.articles,
+      page: this.state.page + 1,
+      loading:false
+    });
+  };
   render() {
     return (
       <div className="container-md container-fluid my-3">
         <h2 className="text-center">NewsApp - Top Headlines</h2>
+        {this.state.loading && <Spinner />}
         <div className="row justify-content-around g-2">
-          {this.state.articles.map((el)=>{
-            let {description, title, url, urlToImage, publishedAt} = el;
-            return  <div className="col-md-4 col-sm-6" key={url}>
-            <NewsItem time={publishedAt} title={title} desc={`${description? description: " "}`} imgUrl={urlToImage} newsUrl={url}/>
-          </div>
+          {!this.state.loading && this.state.articles.map((el) => {
+            let { description, title, url, urlToImage, publishedAt } = el;
+            return (
+              <div className="col-md-4 col-sm-6" key={url}>
+                <NewsItem
+                  time={publishedAt}
+                  title={title}
+                  desc={`${description ? description : " "}`}
+                  imgUrl={urlToImage}
+                  newsUrl={url}
+                />
+              </div>
+            );
           })}
         </div>
-        <div className="d-flex justify-content-between">
-          <button disabled={this.state.page<=1} type="button" className="btn btn-dark" onClick={this.handlePrevClick}>&larr; Previous</button>
-          <button type="button" className="btn btn-dark" onClick={this.handleNextClick}>&rarr; Next</button>
+        <div className="d-flex justify-content-between my-2">
+          <button disabled={this.state.page <= 1} type="button" className="btn btn-dark" onClick={this.handlePrevClick} >&larr; Previous</button>
+          <button disabled={this.state.page + 1 > Math.ceil(this.state.totalResults/this.props.pageSize)} type="button" className="btn btn-dark" onClick={this.handleNextClick}> &rarr; Next </button>
         </div>
       </div>
     );
