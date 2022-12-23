@@ -4,6 +4,9 @@ import NewsItem from "./NewsItem";
 import Spinner from "./Spinner";
 
 export class News extends Component {
+  cat= this.props.category;
+  heading = (this.cat).charAt(0).toUpperCase()+ (this.cat).slice(1);
+
   static defaultProps={
     country:"in",
     pageSize:6,
@@ -282,14 +285,15 @@ export class News extends Component {
     },
   ];
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     console.log("hello this is a constructor from news component");
     this.state = {
       articles: this.articles,
       loading: false,
       page: 1,
     };
+    document.title = `${this.cat === "general" ? "Home" : this.heading} - NEWSApp`
   }
 //common fn to fetch api
   async updateNews(){
@@ -358,7 +362,7 @@ export class News extends Component {
   render() {
     return (
       <div className="container-md container-fluid my-3">
-        <h2 className="text-center py-2">NewsApp - Top Headlines</h2>
+        <h2 className="text-center py-2">Top {this.heading} Headlines</h2>
         {this.state.loading && <Spinner />}
         <div className="row justify-content-around g-3">
           {!this.state.loading && this.state.articles.map((el) => {
