@@ -2,16 +2,20 @@ import React, { Component } from "react";
 
 export class NewsItem extends Component {
   render() {
-    let { title, desc, imgUrl, newsUrl, time } = this.props;
+    let { title, desc, imgUrl, newsUrl, time, author,source } = this.props;
     //css
     const imgSet = {
       aspectRatio: "16/9",
-      objectFit: "contain"
+      objectFit: "cover"
     };
     // console.log(urlToImage)
     return (
       <div className="h-100">
         <div className="card h-100">
+        <span className="position-absolute top-0 translate-middle badge rounded-pill bg-danger" style={{left:"88%", zIndex:"1"}}>
+          {source}
+          <span className="visually-hidden">unread messages</span>
+        </span>
           <img
             src={
               !imgUrl
@@ -23,7 +27,7 @@ export class NewsItem extends Component {
             alt={title}
           />
           <div className="card-body">
-            <small>{time.replace(/T|Z/gi, " ")}</small>
+            <p className="card-text"><small>By <strong>{!author?"Unknown":author}</strong> <br />{new Date(time).toGMTString()}</small></p>
             <h5 className="card-title">{title.slice(0, 40)}...</h5>
             <p className="card-text">{desc.slice(0, 150) + "..."}</p>
             <a href={newsUrl} rel="noreferrer" target="_blank" className="btn btn-dark">

@@ -332,11 +332,11 @@ export class News extends Component {
   render() {
     return (
       <div className="container-md container-fluid my-3">
-        <h2 className="text-center">NewsApp - Top Headlines</h2>
+        <h2 className="text-center py-2">NewsApp - Top Headlines</h2>
         {this.state.loading && <Spinner />}
-        <div className="row justify-content-around g-2">
+        <div className="row justify-content-around g-3">
           {!this.state.loading && this.state.articles.map((el) => {
-            let { description, title, url, urlToImage, publishedAt } = el;
+            let { description, title, url, urlToImage, publishedAt,author,source } = el;
             return (
               <div className="col-md-4 col-sm-6" key={url}>
                 <NewsItem
@@ -345,6 +345,8 @@ export class News extends Component {
                   desc={`${description ? description : " "}`}
                   imgUrl={urlToImage}
                   newsUrl={url}
+                  author={author}
+                  source={source.name}
                 />
               </div>
             );

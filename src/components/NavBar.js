@@ -4,10 +4,10 @@ import {Link} from "react-router-dom";
 export class NavBar extends Component {
   render() {
     return (
-      <nav className="navbar navbar-expand-lg bg-light">
+      <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container-fluid">
           <Link className="navbar-brand" to="/">
-            NewsWorld
+          NewsApp
           </Link>
           <button
             className="navbar-toggler"
