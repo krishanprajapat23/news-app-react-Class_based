@@ -28,7 +28,7 @@ export class NewsItem extends Component {
           />
           <div className="card-body">
             <p className="card-text"><small>By <strong>{!author?"Unknown":author}</strong> <br />{new Date(time).toGMTString()}</small></p>
-            <h5 className="card-title">{title.slice(0, 40)}...</h5>
+            <h5 className="card-title">{title}</h5>
             <p className="card-text">{desc.slice(0, 150) + "..."}</p>
             <a href={newsUrl} rel="noreferrer" target="_blank" className="btn btn-dark">
               Read More
