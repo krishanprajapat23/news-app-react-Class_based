@@ -9,7 +9,6 @@ export class NewsItem extends Component {
       objectFit: "contain"
     };
     // console.log(urlToImage)
-    let timeReplace = { T: "T", Z: "Z" };
     return (
       <div className="h-100">
         <div className="card h-100">
@@ -27,7 +26,7 @@ export class NewsItem extends Component {
             <small>{time.replace(/T|Z/gi, " ")}</small>
             <h5 className="card-title">{title.slice(0, 40)}...</h5>
             <p className="card-text">{desc.slice(0, 150) + "..."}</p>
-            <a href={newsUrl} target="_blank" className="btn btn-dark">
+            <a href={newsUrl} rel="noreferrer" target="_blank" className="btn btn-dark">
               Read More
             </a>
           </div>
