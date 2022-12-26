@@ -12,10 +12,12 @@ export class NewsItem extends Component {
     return (
       <div className="h-100">
         <div className="card h-100">
-        <span className="position-absolute top-0 translate-middle badge rounded-pill bg-danger" style={{left:"88%", zIndex:"1"}}>
+        <div className="position-absolute end-0 top-0 d-flex justify-content-end" style={{zIndex:"1"}}>
+        <span className="badge rounded-pill bg-danger" >
           {source}
           <span className="visually-hidden">unread messages</span>
         </span>
+        </div>
           <img
             src={
               !imgUrl

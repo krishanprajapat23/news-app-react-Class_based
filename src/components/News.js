@@ -300,16 +300,20 @@ export class News extends Component {
   }
 //common fn to fetch api
   async updateNews(){
+    this.props.setProgress(10)
     let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=1982f1087a7741e39dcd68ca30f43f11&page=1&pageSize=${this.props.pageSize}&page=${this.state.page}`;
     this.setState({loading:true})
     let data = await fetch(url);
+    this.props.setProgress(30)
     let parseData = await data.json();
+    this.props.setProgress(70)
     console.log(parseData);
     this.setState({
       articles: parseData.articles,
       totalResults: parseData.totalResults,
       loading:false
     });
+    this.props.setProgress(100)
   }
 
 
@@ -416,7 +420,7 @@ export class News extends Component {
             </div>
           }
         >
-        <div className="container">
+        <div className="container my-3">
         <div className="row justify-content-around g-3">
           {this.state.articles.map((el) => {
             let { description, title, url, urlToImage, publishedAt,author,source } = el;
