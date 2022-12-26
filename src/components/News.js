@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import  propTypes from "prop-types";
 import NewsItem from "./NewsItem";
 import Spinner from "./Spinner";
+import InfiniteScroll from "react-infinite-scroll-component";
+
 
 export class News extends Component {
   cat= this.props.category;
@@ -292,6 +294,7 @@ export class News extends Component {
       articles: this.articles,
       loading: false,
       page: 1,
+      totalResults:0,
     };
     document.title = `${this.cat === "general" ? "Home" : this.heading} - NEWSApp`
   }
@@ -359,12 +362,30 @@ export class News extends Component {
     this.setState({page:this.state.page + 1})
     this.updateNews();
   };
+
+  //fn to load more data
+  fetchMoreData = async () => {
+    this.setState({page: this.state.page+1})
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=1982f1087a7741e39dcd68ca30f43f11&page=1&pageSize=${this.props.pageSize}&page=${this.state.page}`;
+    let data = await fetch(url);
+    let parseData = await data.json();
+    console.log(parseData);
+    this.setState({
+      articles:this.state.articles.concat(parseData.articles),
+      totalResults: parseData.totalResults,
+    });
+
+  };
+
+
+
   render() {
     return (
-      <div className="container-md container-fluid my-3">
+      <>
         <h2 className="text-center py-2">Top {this.heading} Headlines</h2>
         {this.state.loading && <Spinner />}
-        <div className="row justify-content-around g-3">
+        {/*============== with prev and next button ==============*/}
+        {/* <div className="row justify-content-around g-3">
           {!this.state.loading && this.state.articles.map((el) => {
             let { description, title, url, urlToImage, publishedAt,author,source } = el;
             return (
@@ -381,12 +402,46 @@ export class News extends Component {
               </div>
             );
           })}
+        </div> */}
+
+        {/* ================== with infinite scroll =============*/}
+
+        <InfiniteScroll
+          dataLength={this.state.articles.length}
+          next={this.fetchMoreData}
+          hasMore={this.state.articles.length !== this.state.totalResults}
+          loader={
+            <div className="spinner-grow d-block mx-auto my-2" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          }
+        >
+        <div className="container">
+        <div className="row justify-content-around g-3">
+          {this.state.articles.map((el) => {
+            let { description, title, url, urlToImage, publishedAt,author,source } = el;
+            return (
+              <div className="col-md-4 col-sm-6" key={url}>
+                <NewsItem
+                  time={publishedAt}
+                  title={title}
+                  desc={`${description ? description : " "}`}
+                  imgUrl={urlToImage}
+                  newsUrl={url}
+                  author={author}
+                  source={source.name}
+                />
+              </div>
+            );
+          })}
         </div>
-        <div className="d-flex justify-content-between my-2">
+        </div>
+        </InfiniteScroll>
+        {/* <div className="d-flex justify-content-between my-2">
           <button disabled={this.state.page <= 1} type="button" className="btn btn-dark" onClick={this.handlePrevClick} >&larr; Previous</button>
           <button disabled={this.state.page + 1 > Math.ceil(this.state.totalResults/this.props.pageSize)} type="button" className="btn btn-dark" onClick={this.handleNextClick}> &rarr; Next </button>
-        </div>
-      </div>
+        </div> */}
+      </>
     );
   }
 }
